@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Chord Transposer",
+  "version": "1.0",
+  "description": "Transpose chords on any webpage by a specified number of semitones.",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png"
+    }
+  },
+  "icons": {
+    "16": "icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "transpose_1": {
+      "suggested_key": {
+        "default": "Alt+1"
+      },
+      "description": "Transpose up by 1 semitone"
+    },
+    "transpose_minus_1": {
+      "suggested_key": {
+        "default": "Shift+Alt+1"
+      },
+      "description": "Transpose down by 1 semitone"
+    },
+    "transpose_2": {
+      "suggested_key": {
+        "default": "Alt+2"
+      },
+      "description": "Transpose up by 2 semitones"
+    },
+    "transpose_minus_2": {
+      "suggested_key": {
+        "default": "Shift+Alt+2"
+      },
+      "description": "Transpose down by 2 semitones"
+    }
+  }
+}
