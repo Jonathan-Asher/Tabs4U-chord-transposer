@@ -14,48 +14,6 @@ chrome.commands.onCommand.addListener((command) => {
     case 'transpose_minus_2':
       semitones = -2;
       break;
-    case 'transpose_3':
-      semitones = 3;
-      break;
-    case 'transpose_minus_3':
-      semitones = -3;
-      break;
-    case 'transpose_4':
-      semitones = 4;
-      break;
-    case 'transpose_minus_4':
-      semitones = -4;
-      break;
-    case 'transpose_5':
-      semitones = 5;
-      break;
-    case 'transpose_minus_5':
-      semitones = -5;
-      break;
-    case 'transpose_6':
-      semitones = 6;
-      break;
-    case 'transpose_minus_6':
-      semitones = -6;
-      break;
-    case 'transpose_7':
-      semitones = 7;
-      break;
-    case 'transpose_minus_7':
-      semitones = -7;
-      break;
-    case 'transpose_8':
-      semitones = 8;
-      break;
-    case 'transpose_minus_8':
-      semitones = -8;
-      break;
-    case 'transpose_9':
-      semitones = 9;
-      break;
-    case 'transpose_minus_9':
-      semitones = -9;
-      break;
   }
 
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -72,20 +30,26 @@ function transposeChordsOnPage(semitones) {
 
   function changeChordTone(chord, semitones) {
     const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const flatNotes = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
 
-    function getNoteIndex(note) {
-      return notes.indexOf(note);
+    function getNoteIndex(note, useFlatNotes) {
+      const noteList = useFlatNotes ? flatNotes : notes;
+      return noteList.indexOf(note);
     }
 
     function transpose(note, semitones) {
-      const noteIndex = getNoteIndex(note);
+      let useFlatNotes = note.includes('b');
+      let noteList = useFlatNotes ? flatNotes : notes;
+
+      let noteIndex = getNoteIndex(note, useFlatNotes);
       if (noteIndex === -1) return note;
-      let newIndex = (noteIndex + semitones + notes.length) % notes.length;
-      return notes[newIndex];
+      
+      let newIndex = (noteIndex + semitones + noteList.length) % noteList.length;
+      return notes[newIndex]; // Always return the sharp version
     }
 
     function transposeChord(chord, semitones) {
-      return chord.replace(/([A-G]#?)(m?[^\/]*)(\/([A-G]#?)?)?/, (match, rootNote, chordType, slash, bassNote) => {
+      return chord.replace(/([A-G]#?b?)(m?[^\/]*)(\/([A-G]#?b?)?)?/, (match, rootNote, chordType, slash, bassNote) => {
         let transposedChord = transpose(rootNote, semitones) + chordType;
         if (bassNote) {
           transposedChord += '/' + transpose(bassNote, semitones);
